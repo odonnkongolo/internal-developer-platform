@@ -1,0 +1,89 @@
+name: "🏰 IDP Self-Service Golden Paths Provisioner"
+
+on:
+    workflow_dispatch:
+        inputs:
+            service_name:
+                description: "Application Name"
+                required: true
+                default: "ledger-api"
+            service_type:
+                description: "Application Type"
+                required: true
+                type: choice
+                options:
+                    - "backend"
+                    - "frontend"
+            environment:
+                description: "Target Environment Deployment"
+                required: true
+                type: choice
+                options:
+                    - development
+                    - production
+
+env:
+    AWS_REGION: "eu-west-1"
+    SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+jobs:
+
+    scaffold-and-validate: # Job 1: Governance and Quality GateL Linting and Shift Left Code Quality Checks
+
+        name: "🏰 Governance and Quality Gate"
+        runs-on: ubuntu-latest
+        steps:
+
+          - name: "Step 0: Checkout Control Plan"
+            uses: actions/checkout@v4
+
+          - name: "Step 1: Setup Python Environment"
+            if: ${{ github.event.inputs.service_type == 'backend' }}
+            uses: actions/setup-python@v6
+            with:
+              python-version: '3.11' # Always use quotes for version numbers
+
+          - name: "Step 2: Run Shift-Left Security Scans"
+            run: |
+              echo "Simulating automated code quality checks for ${{ github.event.inputs.service_name }}..."
+              echo "Executing Bandit SAST scanning against template library..."
+              echo "Executing TFLint against base Terraform configurations..."
+
+    provision-infrastructure: #Job 2: Dynamic FinOps Provisioning: In a real world scenario,
+                              # this would spin up the actual infrastructure. Development or Production. 
+
+      name: "🐳 Dynamic FinOps Provisioning"
+      needs: scaffold-and-validate
+      runs-on: ubuntu-latest
+      steps:
+        - name: 'Step 3: Checkout Code'  
+          uses: actions/checkout@v4
+
+        - name: "Step 4: Setup Terraform"
+          uses: hashicorp/setup-terraform@v3
+          
+        - name: "Step 5: Execute Cost-Optimized Terraform"
+          run: |
+            echo "Initializing backend cloud providers..."
+            # In a real environment, this spins up specific infrastructure blocks based on inputs:
+            # If environment == development -> Provisions low-cost Spot Instances / Shared Namespaces
+            # If environment == production -> Provisions High-Availability Multi-AZ structures
+            echo "Successfully provisioned isolation paths for service: ${{ github.event.inputs.service_name }}"
+   
+    deploy-service: #Job 3: Autonomous Deployment: If its Backend it deploys to EKS with minimal exposure,
+                    #if its Frontend it deploys to S3
+      name: "🧜🏽‍♂️ Autonomous Deployment" 
+      needs: provision-infrastructure
+      runs-on: ubuntu-latest
+      steps:
+        - name: "Step 6: Deploy Archietcture"
+          run: |
+            echo "Deploying application topology..."
+            if [ "${{ github.event.inputs.service_type }}" == "backend" ]; then
+              echo "Targeting EKS Cluster internal network paths..."
+              echo "Routing Customer Traffic internally via ClusterIP to minimize public exposure."
+            else
+              echo "Targeting AWS CloudFront Edge Network..."
+              echo "Isolating Frontend code assets inside a secure, private S3 Storage Bucket."
+            fi
+            echo "🔥 SUCCESS: ${{ github.event.inputs.service_name }} is live in ${{ github.event.inputs.environment }}!"
