@@ -16,7 +16,7 @@ spec:
       containers:
       - name: api
         # CRITICAL: We use the internal registry name k3s recognizes
-        image: idp-registry:5111/threat-api:v1
+        image: idp-registry:5111/threat-api:v2
         ports:
         - containerPort: 8080
 ---
