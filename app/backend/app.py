@@ -1,7 +1,15 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 import os
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_folder=os.path.join(os.path.dirname(__file__), '..', 'frontend'),
+    static_url_path=''
+)
+
+@app.route('/')
+def serve_frontend():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/health')
 def health_check():

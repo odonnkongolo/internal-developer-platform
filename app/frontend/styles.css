@@ -1,0 +1,289 @@
+/* ── Reset & Base ────────────────────────────── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg:        #0f1117;
+    --surface:   #161922;
+    --surface-2: #1c1f2e;
+    --border:    #262a3a;
+    --text:      #e2e4ea;
+    --text-dim:  #7a7f95;
+    --accent:    #6c72ff;
+    --accent-soft: rgba(108, 114, 255, 0.12);
+    --green:     #34d399;
+    --green-soft: rgba(52, 211, 153, 0.12);
+    --red:       #f87171;
+    --red-soft:  rgba(248, 113, 113, 0.12);
+    --yellow:    #fbbf24;
+    --radius:    12px;
+    --radius-sm: 8px;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* ── Layout ──────────────────────────────────── */
+.app {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    min-height: 100vh;
+}
+
+/* ── Header ──────────────────────────────────── */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+}
+
+.badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+}
+
+/* ── Status Banner ───────────────────────────── */
+.status-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.status-banner.status-loading {
+    background: var(--surface);
+}
+
+.status-banner.status-healthy {
+    background: var(--green-soft);
+    border-color: rgba(52, 211, 153, 0.25);
+}
+
+.status-banner.status-down {
+    background: var(--red-soft);
+    border-color: rgba(248, 113, 113, 0.25);
+}
+
+.status-dot-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12px;
+    height: 12px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--text-dim);
+    transition: background 0.3s;
+}
+
+.status-healthy .status-dot {
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+}
+
+.status-down .status-dot {
+    background: var(--red);
+    box-shadow: 0 0 8px rgba(248, 113, 113, 0.5);
+}
+
+/* Pulse animation for healthy state */
+.status-healthy .status-dot-wrapper::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50%      { transform: scale(2.2); opacity: 0; }
+}
+
+.status-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ── Info Cards ──────────────────────────────── */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.15rem;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.card-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 0.35rem;
+}
+
+.card-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    word-break: break-word;
+}
+
+/* ── Response Panel ──────────────────────────── */
+.response-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.15rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.panel-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+}
+
+.refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 0.4rem 0.75rem;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.refresh-btn:hover {
+    background: rgba(108, 114, 255, 0.2);
+    border-color: var(--accent);
+}
+
+.refresh-btn:active .refresh-icon {
+    animation: spin 0.5s ease;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.json-output {
+    padding: 1.15rem;
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 80px;
+}
+
+.json-muted {
+    color: var(--text-dim);
+}
+
+/* Simple JSON syntax colouring via JS-injected spans */
+.json-key    { color: #a78bfa; }
+.json-string { color: var(--green); }
+.json-number { color: var(--yellow); }
+.json-bool   { color: #60a5fa; }
+
+/* ── Footer ──────────────────────────────────── */
+.footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 500px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+    .app {
+        padding: 1.25rem 1rem;
+    }
+}
